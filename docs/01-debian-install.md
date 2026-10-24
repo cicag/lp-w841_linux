@@ -6,21 +6,7 @@ base system was set up and the traps specific to this hardware.
 ## The 32-bit UEFI trap
 
 Baytrail tablets generally ship a **32-bit UEFI** even though their CPU is
-64-bit. The Debian *amd64* installer contains a 64-bit EFI loader which the
-firmware will not boot. To install amd64 you must supply a 32-bit EFI boot
-loader on the install media:
-
-1. Write the Debian amd64 `netinst` ISO to a USB stick
-   (`dd if=debian-12.*-amd64-netinst.iso of=/dev/sdX bs=4M`).
-2. Mount the first (EFI) partition of the stick and add
-   `/efi/boot/bootia32.efi` (e.g. copied from the `grub-efi-ia32-bin`
-   package / the `bootia32.efi` shipped by many distros), so the firmware can
-   find a 32-bit loader.
-3. Boot the stick, choosing the EFI entry. From there the normal amd64
-   installer runs.
-
-> If the firmware has no boot menu, the tablet's volume/power button combos or
-> `efibootmgr` from an existing system can be used to add a boot entry.
+64-bit. Fortunately, the Debian *amd64* installer contains a 32-bit EFI loader too.
 
 ## Partitioning
 
@@ -62,7 +48,7 @@ which is required for the newer wlroots/sway - see
 ```sh
 sudo apt install \
   sway swaybg sway-backgrounds waybar wvkbd grim \
-  alacritty foot \
+  alacritty \
   seatd \
   network-manager \
   bluez \
