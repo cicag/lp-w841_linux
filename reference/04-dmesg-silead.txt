@@ -1,0 +1,7 @@
+[    1.384982] i2c_designware 80860F41:04: I2C bus managed by PUNIT
+[    5.149377] silead_ts i2c-MSSL1680:00: supply vddio not found, using dummy regulator
+[    5.149468] silead_ts i2c-MSSL1680:00: supply avdd not found, using dummy regulator
+[    5.150010] silead_ts i2c-MSSL1680:00: Silead chip ID: 0x80360000
+[    5.300911] silead_ts i2c-MSSL1680:00: firmware: direct-loading firmware silead/mssl1680.fw
+[    6.505389] input: silead_ts as /devices/platform/80860F41:03/i2c-3/i2c-MSSL1680:00/input/input1
+[    7.093064] input: axp20x-pek as /devices/platform/80860F41:04/i2c-4/i2c-INT33F4:00/axp221-pek/input/input2

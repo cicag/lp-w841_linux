@@ -1,0 +1,1 @@
+This is the exact firmware I pull from [onitake/gsl-firmware](https://github.com/onitake/gsl-firmware/tree/master/firmware/mytab/Garda_U80GT). I dont know if I should just mention the source or keep one here.

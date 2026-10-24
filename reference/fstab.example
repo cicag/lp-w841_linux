@@ -1,0 +1,14 @@
+# Example /etc/fstab for the LP-E841 (Debian 12, 32-bit UEFI boot).
+#
+# The UUIDs below are placeholders: replace them with the ones your installer
+# created. Print them with:
+#
+#   sudo blkid
+#
+# This file is NOT copied by install.sh - /etc/fstab is machine-specific.
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+UUID=<ROOT-UUID>   /               f2fs    defaults 0       1
+UUID=<BOOT-UUID>   /boot           ext4    defaults        0       2
+UUID=<ESP-UUID>    /boot/efi       vfat    umask=0077      0       1
+UUID=<SWAP-UUID>   none            swap    sw              0       0

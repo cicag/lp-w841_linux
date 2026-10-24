@@ -1,0 +1,28 @@
+== date ==
+(redacted)
+== os ==
+PRETTY_NAME="Debian GNU/Linux 12 (bookworm)"
+NAME="Debian GNU/Linux"
+VERSION_ID="12"
+VERSION="12 (bookworm)"
+VERSION_CODENAME=bookworm
+ID=debian
+HOME_URL="https://www.debian.org/"
+SUPPORT_URL="https://www.debian.org/support"
+BUG_REPORT_URL="https://bugs.debian.org/"
+== uname ==
+Linux host 6.1.0-50-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.1.176-1 (2026-07-02) x86_64 GNU/Linux
+== lsmod ==
+silead                 24576  0
+== hostnamectl ==
+ Static hostname: host
+       Icon name: computer-laptop
+         Chassis: laptop 💻
+      Machine ID: <redacted>
+         Boot ID: <redacted>
+Operating System: Debian GNU/Linux 12 (bookworm)
+          Kernel: Linux 6.1.0-50-amd64
+    Architecture: x86-64
+ Hardware Vendor: Insyde
+  Hardware Model: BayTrail
+Firmware Version: PA02V30W3_8008G_10F

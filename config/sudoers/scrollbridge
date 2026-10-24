@@ -1,0 +1,4 @@
+# Let the desktop user start the two-finger scroll helper without a password.
+# install.sh substitutes the target user. Keep mode 0440 and always
+# validate with: sudo visudo -cf /etc/sudoers.d/scrollbridge
+@USER@ ALL=(root) NOPASSWD: /home/@USER@/.local/bin/scrollbridge
