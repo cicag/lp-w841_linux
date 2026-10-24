@@ -4,7 +4,7 @@ This is the most hardware-specific part of the setup. The touchscreen works
 out of the box **only after** a device-specific firmware blob is placed in
 `/lib/firmware/silead/` and a calibration matrix is installed. A fresh Debian
 install does **not** touchscreen-anything: see the
-[Debian 13 anomaly](#debian-13-anomaly-touchscreen-not-detected) at the bottom.
+[Debian 13](#debian-13-anomaly-touchscreen-not-detected) at the bottom.
 
 ## Identity
 
@@ -27,10 +27,6 @@ input: silead_ts as /devices/platform/80860F41:03/i2c-3/i2c-MSSL1680:00/input/in
 
 ## Firmware
 
-The driver asks the kernel for `silead/mssl1680.fw` and **only registers the
-input device after that firmware has been loaded successfully**. There is no
-fallback: without the file, the probe aborts and `silead_ts` never appears.
-
 | | |
 |---|---|
 | Path | `/lib/firmware/silead/mssl1680.fw` |
@@ -38,23 +34,19 @@ fallback: without the file, the probe aborts and `silead_ts` never appears.
 | MD5 | `aa4340ace4dbf14e8a375b0afad382d7` |
 
 A copy is kept in this repo at
-[`firmware/mssl1680.fw`](../firmware/mssl1680.fw) and is installed by
+[`firmware/mssl1680.fw`](../firmware/mssl1680.fw), you can copy or install by
 [`install.sh`](../install.sh).
 
 ### Where it comes from
 
-The blob is proprietary and is **not shipped by any Debian package** (verified:
+The firmware is proprietary and is **not shipped by any Debian package** (verified:
 `dpkg -S /lib/firmware/silead/mssl1680.fw` -> *no path found*; it is not owned by
-`firmware-*`). It originates from the tablet's **Windows Silead/Goodix driver**
-and is extracted with the tools in
-[onitake/gsl-firmware](https://github.com/onitake/gsl-firmware)
-(`fwtool` / `silead_scrub`). For this panel the extracted file is exactly
-`mssl1680.fw`.
+`firmware-*`). It originates from the tablet's **Windows Silead/Goodix driver**. Fortunately, someone did the heavy part at
+[onitake/gsl-firmware](https://github.com/onitake/gsl-firmware/tree/master/firmware/mytab/Garda_U80GT). Turn out LP-W841 share the same hardware with Garda U80GT.
 
 ### Install
 
 ```sh
-sudo install -d /lib/firmware/silead
 sudo cp mssl1680.fw /lib/firmware/silead/mssl1680.fw
 # reload the driver (or just reboot)
 sudo modprobe -r silead && sudo modprobe silead
@@ -128,15 +120,6 @@ Reload without rebooting:
 sudo udevadm control --reload-rules
 sudo udevadm trigger --subsystem-match=input --action=change
 ```
-
-> The values above were fitted on the author's unit. If touches are slightly
-> off on another LP-E841, repeat the four-corner capture and re-fit - the
-> procedure is fully described above.
->
-> The **udev** property takes **6** floats. The equivalent **Xorg/libinput X
-> property** takes **9** (a full 3x3, ending `0 0 1`). This matters only if you
-> are on Xorg; sway/Wayland reads the udev property.
-
 ### Live test / temporary apply
 
 On Wayland the calibration can be checked by looking at where a drag lands; on
@@ -187,20 +170,6 @@ It is launched from the sway autostart (see
 [sway-tablet/docs/01-desktop-sway.md](https://github.com/cicag/sway-tablet/blob/main/docs/01-desktop-sway.md)). The helper is a prebuilt binary;
 no source is included in this repo.
 
-## Quick diagnostic checklist
-
-```sh
-dmesg | grep -i silead                  # chip id + firmware load
-libinput list-devices | grep -i silead  # is silead_ts present?
-sudo evtest /dev/input/eventN           # do raw events arrive?
-```
-
-- No `silead_ts` device at all -> firmware missing (next section) or i2c issue.
-- `silead_ts` present but touches land off/wrong axis -> calibration matrix.
-- Touches work but no scroll -> `scrollbridge` / `/dev/uinput` permissions.
-
----
-
-## Debian 13 anomaly: touchscreen not detected
+## Debian 13: touchscreen not detected
 
 Well, somehow when I try it on debian 13 installation, with its 6.18 kernel, the silead firmware didnt load, the driver didnt even appear in the i2c devices list. So, I have debian 12 and 6.1 kernel in this one.
