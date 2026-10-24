@@ -3,7 +3,7 @@
 The tablet runs **Debian 12 (bookworm) amd64**. This document records how the
 base system was set up and the traps specific to this hardware.
 
-## The 32-bit UEFI trap
+## The 32-bit UEFI
 
 Baytrail tablets generally ship a **32-bit UEFI** even though their CPU is
 64-bit. Fortunately, the Debian *amd64* installer contains a 32-bit EFI loader too.
