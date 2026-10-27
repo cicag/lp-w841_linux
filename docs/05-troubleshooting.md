@@ -1,4 +1,4 @@
-# 09 - Troubleshooting
+# 05 - Troubleshooting
 
 Known issues hit while building this setup, and how they were resolved.
 
@@ -13,32 +13,6 @@ sudo udevadm trigger --subsystem-match=input --action=change
 ```
 
 See [docs/02-touchscreen-silead.md](02-touchscreen-silead.md#calibration).
-
-**No two-finger scroll.** `scrollbridge` is not running or cannot open
-`/dev/uinput`. Ensure the `99-uinput.rules` udev rule is installed and the
-service/launch happened (`pgrep scrollbridge`).
-
-## Display / compositor
-
-**`grim` fails under Vulkan.**
-
-```
-[wlr] [render/vulkan/renderer.c:1079] vulkan_read_pixels: could not find adequate memory type for image dump
-failed to copy output DSI-1
-```
-
-This is the wlroots Vulkan renderer being unable to read pixels back on this
-GPU. **Take screenshots with the GLES2 renderer** (`WLR_RENDERER=gles2 sway`).
-The screenshots in
-[`sway-tablet/screenshots`](https://github.com/cicag/sway-tablet/blob/main/screenshots)
-were captured this way.
-
-**`MESA-INTEL: warning: Bay Trail Vulkan support is incomplete`.** Expected -
-BYT has incomplete Vulkan. Harmless for the compositor, but prefer OpenGL for
-games and other GPU-heavy applications.
-
-**Vulkan validation / obsolete ICD messages.** Cosmetic; the `intel_hasvk` ICD
-is the active one for BYT.
 
 ## Input
 
@@ -68,15 +42,8 @@ client is created**, so the driver never binds:
 
 **Recommendation: stay on the 6.1 kernel.**
 
-## Memory / performance
+## Audio
 
 **No sound.** Ensure `firmware-intel-sound` is installed (SST firmware) and the
-`bytcr-rt5640` card is up (`wpctl status`).
-
-**SSH session can't find the Wayland session.** Export the session variables:
-
-```sh
-export XDG_RUNTIME_DIR=/run/user/$(id -u)
-export WAYLAND_DISPLAY=wayland-1
-export SWAYSOCK=$(ls -t /run/user/$(id -u)/sway-ipc.*.sock | head -1)
-```
+`bytcr-rt5640` card is present (`aplay -l`). Use `alsamixer` or your preferred
+sound server/mixer to unmute and set the level.

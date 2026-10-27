@@ -1,0 +1,43 @@
+Firmware provenance and attribution
+===================================
+
+File:             firmware/mssl1680.fw
+Original filename: firmware_00.fw
+Size:             35376 bytes
+MD5:              aa4340ace4dbf14e8a375b0afad382d7
+SHA256:           69334fc1a8febbaf74efa92ff870f39ff5f84d7f819993fe35f878ab78c3cfe2
+Modified:         no; only renamed to the filename expected by the Linux
+                  silead driver
+
+Upstream source
+---------------
+Project:          onitake/gsl-firmware
+URL:              https://github.com/onitake/gsl-firmware/tree/master/firmware/mytab/Garda_U80GT
+Commit:           dbaac009452f8a4810d02517d5f8e748fefccb2a
+Path:             firmware/mytab/Garda_U80GT/firmware_00.fw
+Commit date:      2026-05-24
+Upstream device:  Mytab Garda U80GT (1280x800 display, 1662x896 touch panel,
+                  GSL1680 controller)
+
+The file in this repository was verified to be a byte-for-byte copy of the
+upstream `firmware_00.fw` at the commit above (matching SHA256).
+
+Compatibility note
+------------------
+The Wearness LP-W841 is reported to use the same panel/touch hardware as the
+Garda U80GT, and this firmware is reported to work on the LP-W841. This is a
+user-reported compatibility claim, not a confirmation from the device vendor.
+
+License status
+--------------
+The firmware was extracted by the upstream project from a vendor Windows or
+Android driver. It may be covered by proprietary licenses or copyright. No
+license is granted by this repository, and the MIT license in the repository
+root does not apply to this file. Consult the original manufacturer/device
+documentation for any applicable terms.
+
+"Wearness", "Silead", "Mytab", "Garda" and other names are trademarks of their
+respective owners. This repository is not affiliated with or endorsed by them.
+
+The file is redistributed as-is solely to make the device's existing hardware
+usable with Linux (interoperability), with no warranty of any kind.

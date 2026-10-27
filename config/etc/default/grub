@@ -3,9 +3,9 @@
 # For full documentation of the options in this file, see:
 #   info -f grub -n 'Simple configuration'
 
-# Boot the first (stock) kernel. The LP-E841 works with Debian 12's 6.1 kernel:
+# Boot the first (stock) kernel. The LP-W841 works with Debian 12's 6.1 kernel:
 # the touchscreen (ACPI I2C Silead) is enumerated there. Newer kernels (6.12+)
-# lose the touchscreen - see docs/07-troubleshooting.md.
+# lose the touchscreen - see docs/05-troubleshooting.md.
 GRUB_DEFAULT=0
 GRUB_TIMEOUT=1
 GRUB_DISTRIBUTOR=`lsb_release -i -s 2> /dev/null || echo Debian`

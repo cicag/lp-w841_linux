@@ -32,22 +32,34 @@ input: silead_ts as /devices/platform/80860F41:03/i2c-3/i2c-MSSL1680:00/input/in
 | Path | `/lib/firmware/silead/mssl1680.fw` |
 | Size | 35376 bytes |
 | MD5 | `aa4340ace4dbf14e8a375b0afad382d7` |
+| SHA256 | `69334fc1a8febbaf74efa92ff870f39ff5f84d7f819993fe35f878ab78c3cfe2` |
 
-A copy is kept in this repo at
-[`firmware/mssl1680.fw`](../firmware/mssl1680.fw), you can copy or install by
-[`install.sh`](../install.sh).
+A byte-for-byte copy is kept in this repo at
+[`firmware/mssl1680.fw`](../firmware/mssl1680.fw).
 
 ### Where it comes from
 
 The firmware is proprietary and is **not shipped by any Debian package** (verified:
 `dpkg -S /lib/firmware/silead/mssl1680.fw` -> *no path found*; it is not owned by
-`firmware-*`). It originates from the tablet's **Windows Silead/Goodix driver**. Fortunately, someone did the heavy part at
-[onitake/gsl-firmware](https://github.com/onitake/gsl-firmware/tree/master/firmware/mytab/Garda_U80GT). Turn out LP-W841 share the same hardware with Garda U80GT.
+`firmware-*`). It originates from the vendor's **Windows Silead/Goodix
+driver**. The copy here comes from
+[onitake/gsl-firmware](https://github.com/onitake/gsl-firmware/tree/master/firmware/mytab/Garda_U80GT),
+entry `firmware/mytab/Garda_U80GT/firmware_00.fw` at commit
+`dbaac009452f8a4810d02517d5f8e748fefccb2a`. It was renamed to
+`mssl1680.fw` (the filename the Linux `silead` driver expects); the binary was
+not modified.
+
+LP-W841 compatibility is reported by the author, not confirmed by the vendor.
+The upstream entry is for a **Mytab Garda U80GT**, which appears to use the
+same panel/touch hardware. See [`firmware/NOTICE`](../firmware/NOTICE) for the
+licensing status and full attribution.
 
 ### Install
 
+Run from the repository root:
+
 ```sh
-sudo cp mssl1680.fw /lib/firmware/silead/mssl1680.fw
+sudo install -Dm644 firmware/mssl1680.fw /lib/firmware/silead/mssl1680.fw
 # reload the driver (or just reboot)
 sudo modprobe -r silead && sudo modprobe silead
 ```
@@ -114,9 +126,11 @@ Installed as a udev rule so libinput picks it up when the device appears -
 SUBSYSTEM=="input", ATTRS{name}=="silead_ts", ENV{LIBINPUT_CALIBRATION_MATRIX}="0.000008 4.706890 -0.015518 2.545830 -0.001448 -0.018488"
 ```
 
-Reload without rebooting:
+Install the rule (run from the repository root) and reload without rebooting:
 
 ```sh
+sudo install -Dm644 config/etc/udev/rules.d/99-silead-calibration.rules \
+  /etc/udev/rules.d/99-silead-calibration.rules
 sudo udevadm control --reload-rules
 sudo udevadm trigger --subsystem-match=input --action=change
 ```
@@ -133,42 +147,12 @@ xinput set-prop silead_ts "libinput Calibration Matrix" \
 If a corner is consistently off, re-tap the 4 corners and refit; the matrix is
 just the affine solution of the 4 point correspondences.
 
-### Map to the panel
+### Output mapping and rotation
 
-The touchscreen itself has no notion of which output it belongs to; sway maps it
-in `~/.config/sway/local.conf` (included by `sway/config`, since the device name
-is machine-specific — see
-[the desktop docs](https://github.com/cicag/sway-tablet/blob/main/docs/01-desktop-sway.md)):
-
-```
-input "0:0:silead_ts" {
-    map_to_output DSI-1
-}
-```
-
-This is essential because there is exactly one output and the touchscreen would
-otherwise be unassigned. Rotation is handled separately
-([sway-tablet/docs/01-desktop-sway.md](https://github.com/cicag/sway-tablet/blob/main/docs/01-desktop-sway.md)); note that a display `transform`
-change requires judging whether the calibration matrix should also be swapped
-for that orientation.
-
-## Two-finger scrolling
-
-The MSSL1680 driver exposes multitouch (`ABS_MT_*`) but sway's default
-pointer/scroll handling is awkward with a `DIRECT` touchscreen. A small helper,
-`scrollbridge` (kept at
-[`scrollbridge`](https://github.com/cicag/sway-tablet/blob/main/config/home/.local/bin/scrollbridge)),
-reads the touch events and synthesises scroll on a virtual `uinput` device. It
-needs write access to `/dev/uinput`, granted by
-[`config/etc/udev/rules.d/99-uinput.rules`](../config/etc/udev/rules.d/99-uinput.rules):
-
-```
-KERNEL=="uinput", SUBSYSTEM=="misc", MODE="0660", GROUP="input"
-```
-
-It is launched from the sway autostart (see
-[sway-tablet/docs/01-desktop-sway.md](https://github.com/cicag/sway-tablet/blob/main/docs/01-desktop-sway.md)). The helper is a prebuilt binary;
-no source is included in this repo.
+The touchscreen itself has no notion of which output it belongs to. Mapping it
+to a display and applying rotation are handled by the display server or
+compositor; those settings are outside this repo. If you rotate the panel,
+verify that the calibration matrix still matches the orientation.
 
 ## Debian 13: touchscreen not detected
 

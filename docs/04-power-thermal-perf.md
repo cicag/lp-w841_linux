@@ -113,8 +113,7 @@ blacklist kvm
 ## Services and targets
 
 - Default systemd target set to `multi-user.target` (no graphical/display
-  manager target): the desktop starts from a getty autologin instead
-  ([sway-tablet/docs/01-desktop-sway.md](https://github.com/cicag/sway-tablet/blob/main/docs/01-desktop-sway.md)).
+  manager target). Starting a graphical session is outside this repo.
 - `networking.service` (ifupdown) is **disabled**; networking is handled by
   **NetworkManager**.
 - `fstrim.timer` and `dpkg-db-backup.timer` are enabled (periodic trim is good
@@ -123,18 +122,18 @@ blacklist kvm
 
 Enabled units on the device (`reference/system-info.txt`): apparmor, bluetooth,
 console-setup, getty@, keyboard-setup, lm-sensors, log2ram, NetworkManager
-(+dispatcher), seatd, ssh, systemd-pstore, systemd-timesyncd, wpa_supplicant,
+(+dispatcher), ssh, systemd-pstore, systemd-timesyncd, wpa_supplicant,
 zerotier-one, zramswap, remote-fs.target, plus the fstrim/log2ram/backup/logrotate
 timers.
 
 ## Kernel command line / boot
 
 `GRUB_TIMEOUT=1` keeps the boot menu from blocking a tablet user. Combined with
-getty autologin and `fastboot=1` (GPU), boot is as quick as this hardware allows.
+`fastboot=1` (GPU), boot is as quick as this hardware allows.
 
 ## What this buys you
 
-After the tweaks the system boots to the sway desktop using roughly
-**400 MB** of RAM with ~290 MB available (see
-`reference/system-info.txt`), leaving real headroom for a browser.
+After the tweaks a light graphical session uses roughly **400 MB** of RAM with
+~290 MB available (see `reference/system-info.txt`), leaving real headroom for
+a browser.
 The zram swap absorbs the occasional memory spike without hammering the eMMC.

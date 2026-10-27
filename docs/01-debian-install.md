@@ -20,8 +20,10 @@ The resulting layout (`lsblk`, see `reference/system-info.txt`) is:
 | mmcblk1p4 | ~13G | **f2fs** | `/` |
 
 F2FS is chosen for the root filesystem because it is flash-friendly and its
-read/write behaviour suits eMMC. The matching `/etc/fstab` is in
-`config/etc/fstab`, and uses UUIDs.
+read/write behaviour suits eMMC. `/etc/fstab` is machine-specific (its UUIDs
+come from your own partitions), so it is not shipped - adapt
+[`reference/fstab.example`](../reference/fstab.example) if you need the same
+layout.
 
 ## Firmware packages
 
@@ -38,53 +40,40 @@ relevant binary firmware blobs come from:
 > [docs/02-touchscreen-silead.md](02-touchscreen-silead.md). It has to be
 > copied from an extracted Windows driver.
 
-## Base packages
+## Device packages
 
-Beyond the standard system, the desktop stack is installed from the archive
-(bookworm) with some pieces from **bookworm-backports** (notably Mesa 25.x,
-which is required for the newer wlroots/sway - see
-[docs/06-vulkan-renderer-backport.md](06-vulkan-renderer-backport.md)):
+Beyond the standard system, install the device-level packages from the
+bookworm archive; some pieces come from **bookworm-backports** (notably Mesa
+25.x for the GPU). The graphical session and desktop stack are out of scope -
+install your preferred one separately:
 
 ```sh
 sudo apt install \
-  sway swaybg sway-backgrounds waybar wvkbd grim \
-  alacritty \
-  seatd \
   network-manager \
   bluez \
-  alsa-utils pipewire wireplumber \
+  alsa-utils \
   libinput-tools evtest \
   mesa-utils vulkan-tools \
-  python3-gi gir1.2-gtk-3.0 \
   lm-sensors \
   zram-tools log2ram \
   openssh-server
 ```
 
-Key package versions observed on the device (`apt policy`, see
+Key device-level package versions observed on the device (`apt policy`, see
 `reference/system-info.txt`):
 
 ```
-sway 1.7-6 (stock) ... but /usr/local/bin/sway is 1.8.1 (built, see
-[docs/06-vulkan-renderer-backport.md](06-vulkan-renderer-backport.md))
-libwlroots10 0.15.1-6, /usr/local/lib/libwlroots.so.11 = 0.16.2
 mesa 25.0.7-2~bpo12+1
 libinput 1.22.1
-waybar 0.9.17-2, wvkbd 0.12-1, grim, log2ram 1.7.2, zram-tools 0.3.3.1
+log2ram 1.7.2, zram-tools 0.3.3.1
 ```
 
-## Users, sudo, session
+## Users
 
-- Create your own user during installation; the commands below assume it is
-  `$USER`. `seatd` and `ssh` are enabled.
-- The user must be able to run the few root helpers (e.g. `scrollbridge`)
-  without an interactive prompt: `autostart.sh` starts it with `sudo -n`, so
-  either add a `NOPASSWD` sudoers rule for that binary or run it another way.
-- The machine boots to `multi-user.target`, then getty autologin on tty1 starts
-  sway (no display manager). See [sway-tablet/docs/01-desktop-sway.md](https://github.com/cicag/sway-tablet/blob/main/docs/01-desktop-sway.md).
-- `/etc/fstab` is machine-specific (its UUIDs come from your own partitions),
-  so it is not shipped - adapt [reference/fstab.example](../reference/fstab.example)
-  if you need the same f2fs/`/boot`/ESP/swap layout.
+- Create your own user during installation; the rest of the docs assume it is
+  `$USER`. Add it to the `video` and `input` groups.
+- The base system boots to `multi-user.target`. Starting a graphical session
+  (display manager, autologin, compositor, desktop) is outside this repo.
 
 ## Optional: keep the system lean
 
