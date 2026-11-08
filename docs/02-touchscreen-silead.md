@@ -1,10 +1,7 @@
 # 02 - Silead touchscreen (MSSL1680)
 
-This is the most hardware-specific part of the setup. The touchscreen works
-out of the box **only after** a device-specific firmware blob is placed in
-`/lib/firmware/silead/` and a calibration matrix is installed. A fresh Debian
-install does **not** touchscreen-anything: see the
-[Debian 13](#debian-13-anomaly-touchscreen-not-detected) at the bottom.
+**Kernel 6.1 is required** for Silead; see
+[kernel note](#debian-13-and-newer-kernels-touchscreen-not-detected) below.
 
 ## Identity
 
@@ -39,10 +36,7 @@ A byte-for-byte copy is kept in this repo at
 
 ### Where it comes from
 
-The firmware is proprietary and is **not shipped by any Debian package** (verified:
-`dpkg -S /lib/firmware/silead/mssl1680.fw` -> *no path found*; it is not owned by
-`firmware-*`). It originates from the vendor's **Windows Silead/Goodix
-driver**. The copy here comes from
+The firmware is proprietary and is **not shipped by any Debian package**. The copy here comes from
 [onitake/gsl-firmware](https://github.com/onitake/gsl-firmware/tree/master/firmware/mytab/Garda_U80GT),
 entry `firmware/mytab/Garda_U80GT/firmware_00.fw` at commit
 `dbaac009452f8a4810d02517d5f8e748fefccb2a`. It was renamed to
@@ -154,6 +148,12 @@ to a display and applying rotation are handled by the display server or
 compositor; those settings are outside this repo. If you rotate the panel,
 verify that the calibration matrix still matches the orientation.
 
-## Debian 13: touchscreen not detected
+## Debian 13 and newer kernels: touchscreen not detected
 
-Well, somehow when I try it on debian 13 installation, with its 6.18 kernel, the silead firmware didnt load, the driver didnt even appear in the i2c devices list. So, I have debian 12 and 6.1 kernel in this one.
+Debian 13 (trixie) is fine for this device **as long as you downgrade/pin the
+kernel to 6.1**. On Debian 13's default newer kernel (e.g. 6.12+/6.18 in
+testing), the Silead firmware may not load because the ACPI I2C client/driver
+binding fails and the `silead_ts` device does not appear in the I2C/input
+device list. Debian 12's stock 6.1 kernel works; on Debian 13, install a 6.1
+kernel package, set it as the default boot entry, and reboot. See
+[docs/05-troubleshooting.md](05-troubleshooting.md#kernel).

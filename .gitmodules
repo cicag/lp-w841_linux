@@ -1,0 +1,3 @@
+[submodule "sway-tablet"]
+	path = sway-tablet
+	url = https://github.com/cicag/sway-tablet

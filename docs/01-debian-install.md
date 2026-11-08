@@ -1,7 +1,12 @@
 # 01 - Debian install
 
-The tablet runs **Debian 12 (bookworm) amd64**. This document records how the
-base system was set up and the traps specific to this hardware.
+This document records how the base system was set up and the traps specific to
+this hardware. It can be done with **Debian 12 (bookworm)** or **Debian 13
+(trixie) amd64**.
+
+> **Silead touchscreen requirement:** use/pin **kernel 6.1**. Debian 12 ships
+> 6.1. Debian 13 is OK as long as you downgrade/pin the kernel to 6.1; on 6.12+
+> the Silead ACPI I2C client is not created and the touchscreen does not work.
 
 ## The 32-bit UEFI
 
@@ -27,9 +32,11 @@ layout.
 
 ## Firmware packages
 
-The install must have `contrib non-free non-free-firmware` enabled
-(`config/etc/apt/sources.list` includes them, plus `bookworm-backports`). The
-relevant binary firmware blobs come from:
+The install must have `contrib`, `non-free`, and `non-free-firmware` enabled
+for your Debian release. The example [`config/etc/apt/sources.list`](../config/etc/apt/sources.list)
+in this repo is from a **bookworm** setup (including `bookworm-backports`);
+adapt it to your release if you use Debian 13/trixie or a different mirror
+layout. The relevant binary firmware blobs come from:
 
 - `firmware-realtek` - WiFi + Bluetooth for the **RTL8723BS**.
 - `firmware-intel-sound` - the **Intel SST** firmware (`fw_sst_0f28.bin`)
@@ -42,10 +49,10 @@ relevant binary firmware blobs come from:
 
 ## Device packages
 
-Beyond the standard system, install the device-level packages from the
-bookworm archive; some pieces come from **bookworm-backports** (notably Mesa
-25.x for the GPU). The graphical session and desktop stack are out of scope -
-install your preferred one separately:
+Beyond the standard system, install the device-level packages for your Debian
+release (some setups use backports for newer Mesa/GPU packages; the shipped
+example sources include bookworm-backports). The graphical session and desktop
+stack are out of scope - install your preferred one separately:
 
 ```sh
 sudo apt install \

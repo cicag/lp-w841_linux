@@ -21,17 +21,19 @@ user must be in the `input` group. Check `groups` and `/tmp/powerkeyd.log`.
 
 ## Kernel
 
-**Touchscreen disappears on a newer kernel.** Debian 12's stock **6.1** kernel
-enumerates the Silead digitizer as an ACPI I2C client:
+**Touchscreen disappears on a newer kernel (kernel 6.1 required).** Kernel
+**6.1** enumerates the Silead digitizer as an ACPI I2C client (Debian 12 ships
+6.1; on Debian 13 you can downgrade/pin to 6.1):
 
 ```
 silead_ts i2c-MSSL1680:00: firmware: direct-loading firmware silead/mssl1680.fw
 input: silead_ts as /devices/platform/80860F41:03/i2c-3/i2c-MSSL1680:00/input/input5
 ```
 
-On **6.12** the ACPI device is still there (`MSSL1680:00`, path
-`\_SB_.I2C4.TCS0`, address `0x40` on `80860F41:03` / `i2c-3`), but **no I2C
-client is created**, so the driver never binds:
+On **6.12+** (including newer kernels common on Debian 13) the ACPI device is
+still there (`MSSL1680:00`, path `\_SB_.I2C4.TCS0`, address `0x40` on
+`80860F41:03` / `i2c-3`), but **no I2C client is created**, so the driver never
+binds:
 
 - the `silead` module loads, but there is no `i2c-MSSL1680:00` device and no
   `physical_node`;

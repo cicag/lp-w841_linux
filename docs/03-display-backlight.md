@@ -15,7 +15,7 @@ The panel backlight is the standard `intel_backlight` PWM interface:
 ```
 
 By default `brightness` is `root:root` mode `0644`, so a normal user cannot
-change it. A udev rule relaxes this at boot -
+change it. Apply
 [`config/etc/udev/rules.d/90-backlight.rules`](../config/etc/udev/rules.d/90-backlight.rules):
 
 ```
@@ -63,3 +63,4 @@ LIBVA_DRIVER_NAME=i965
 - Volume/mute handling is outside this repo; use `alsamixer` or your preferred
   sound server/mixer. The hardware volume keys are ordinary evdev key events and
   can be bound by whatever session you use.
+- Use [this](https://gist.github.com/jfstenuit/09feac5ab0bff500db81ac9a56a48773) as reference.
